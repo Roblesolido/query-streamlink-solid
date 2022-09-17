@@ -37,6 +37,11 @@ def index():
            "usage. "
 
 
+@app.route("/twitch.m3u8")
+def xTwitch():
+    return "Hola Twitch"
+
+
 @app.route("/iptv-query", methods=['GET'])
 @limiter.limit("20/minute")
 @limiter.limit("1/second")
