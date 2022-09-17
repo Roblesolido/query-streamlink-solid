@@ -37,9 +37,9 @@ def index():
            "usage. "
 
 
-@app.route("/twitch.m3u8")
-def xTwitch():
-    return "Hola Twitch"
+@app.route("/twitch/<channel_id>.m3u8")
+def mytwitch(channel_id):
+    return "Hola Canal Twitch " + channel_id
 
 
 @app.route("/iptv-query", methods=['GET'])
