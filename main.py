@@ -40,12 +40,8 @@ def index():
 @app.route("/twitch/<channel_id>.m3u8")
 def mytwitch(channel_id):
     myurl = "https://www.twitch.tv/" + channel_id
-    response = query_handler(myurl)
-    valid2 = validators.url(response)
-    if response is None or not valid2:
-        return f"Streamlink returned nothing from query {myurl}, reason being {response}"
-
-    return response
+    valid = validators.url(myurl)
+    return get_streams(myurl) if valid else "The URL you've entered is not valid."
 
 
 @app.route("/iptv-query", methods=['GET'])
