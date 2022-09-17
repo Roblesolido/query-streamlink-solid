@@ -47,7 +47,7 @@ def mytwitch(channel_id):
     if response is None or not valid2:
         return f"Streamlink returned nothing from query {myurl}, reason being {response}"
 
-    return response if request.args.get("noredirect") == "yes" else redirect(response)
+    return redirect(response)
 
 
 @app.route("/iptv-query", methods=['GET'])
