@@ -42,8 +42,9 @@ def mytwitch(channel_id):
     if not channel_id:
         return "You didn't give any channel."
     else:
-        valid = "https://www.twitch.tv/" + channel_id
-        return get_streams(valid)
+        myurl = "https://www.twitch.tv/" + channel_id
+        valid = validators.url(myurl)
+        return get_streams(myurl) if valid else "The URL you've entered is not valid."
 
 
 @app.route("/iptv-query", methods=['GET'])
