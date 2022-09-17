@@ -39,7 +39,11 @@ def index():
 
 @app.route("/twitch/<channel_id>.m3u8")
 def mytwitch(channel_id):
-    return "Hola Canal Twitch " + channel_id
+    if not channel_id:
+        return "You didn't give any channel."
+    else:
+        valid = "https://www.twitch.tv/" + channel_id
+        return get_streams(valid)
 
 
 @app.route("/iptv-query", methods=['GET'])
