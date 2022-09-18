@@ -27,7 +27,16 @@ def query_handler(args):
         valid = validators.url(args.get("streaming-ip"))
         return get_streams(args.get("streaming-ip")) if valid else "The URL you've entered is not valid."
 
+    
+def query_twitch(channel_id):
+    """Checks and tests arguments before serving request"""
+    twitch_url = "https://www.twitch.tv/" + channel_id
 
+    # for dacast, be warned we have MULTIPLE parameters. Get it if exists
+    valid7 = validators.url(twitch_url)
+    return get_streams(twitch_url) if valid7 else "The URL you've entered is not valid."
+
+    
 @app.route("/", methods=['GET'])
 def index():
     return "This program permits you to get direct access to streams by using Streamlink.\r\nIf you have a link that " \
@@ -38,10 +47,15 @@ def index():
 
 
 @app.route("/twitch/<channel_id>.m3u8")
+@limiter.limit("20/minute")
+@limiter.limit("1/second")
 def mytwitch(channel_id):
-    myurl = "https://www.twitch.tv/" + channel_id
-    validTW = validators.url(myurl)
-    return get_streams(myurl) if validTW else "The URL you've entered is not valid."
+    response = query_twitch(channel_id)
+    valid6 = validators.url(response)
+    if response is None or not valid6:
+        return f"Streamlink returned nothing from query {channel_id}, reason being {response}"
+
+    return redirect(response)
 
 
 @app.route("/iptv-query", methods=['GET'])
