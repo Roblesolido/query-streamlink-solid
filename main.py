@@ -28,13 +28,17 @@ def query_handler(args):
         return get_streams(args.get("streaming-ip")) if valid else "The URL you've entered is not valid."
 
     
-def query_twitch(channel_id):
-    """Checks and tests arguments before serving request"""
-    twitch_url = "https://www.twitch.tv/" + channel_id
+def query_media_site(site_id, channel_id):
+    """Checks id before serving request"""
+    my_url = ""
+    if site_id == "twitch":
+        my_url = "https://www.twitch.tv/" + channel_id
+    elif site_id == "youtube":
+        my_url = "https://www.youtube.com/embed/" + channel_id
 
     # for dacast, be warned we have MULTIPLE parameters. Get it if exists
-    valid7 = validators.url(twitch_url)
-    return get_streams(twitch_url) if valid7 else "The URL you've entered is not valid."
+    valid7 = validators.url(my_url)
+    return get_streams(my_url) if valid7 else "The URL you've entered is not valid."
 
     
 @app.route("/", methods=['GET'])
@@ -46,11 +50,11 @@ def index():
            "usage. "
 
 
-@app.route("/twitch/<channel_id>.m3u8")
+@app.route("/<site_id>/<channel_id>.m3u8")
 @limiter.limit("20/minute")
 @limiter.limit("1/second")
-def mytwitch(channel_id):
-    response = query_twitch(channel_id)
+def mytwitch(site_id, channel_id):
+    response = query_media_site(site_id, channel_id)
     valid6 = validators.url(response)
     if response is None or not valid6:
         return f"Streamlink returned nothing from query {channel_id}, reason being {response}"
