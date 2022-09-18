@@ -28,19 +28,19 @@ def query_handler(args):
         return get_streams(args.get("streaming-ip")) if valid else "The URL you've entered is not valid."
 
     
-def query_media_site(o_site, o_id):
+def query_media_site(_site, _id):
     """Check if the site is enabled"""
-    o_url = ""
-    if o_site == "twitch":
-        o_url = "https://www.twitch.tv/" + o_id
-    elif o_site == "youtube":
-        o_url = "https://www.youtube.com/channel/" + o_id
-    elif o_site == "youtubevideo":
-        o_url = "https://www.youtube.com/watch?v=" + o_id
+    _url = ""
+    if _site == "twitch":
+        _url = "https://www.twitch.tv/" + _id
+    elif _site == "youtube":
+        _url = "https://www.youtube.com/channel/" + _id
+    elif _site == "youtubevideo":
+        _url = "https://www.youtube.com/watch?v=" + _id
 
     # Check for a valid address
-    valid7 = validators.url(o_url)
-    return get_streams(o_url) if valid7 else "The URL you've entered is not valid."
+    valid7 = validators.url(_url)
+    return get_streams(_url) if valid7 else "The URL you've entered is not valid."
 
     
 @app.route("/", methods=['GET'])
@@ -52,14 +52,14 @@ def index():
            "usage. "
 
 
-@app.route("/<o_site>/<o_id>.m3u8")
+@app.route("/<_site>/<_id>.m3u8")
 @limiter.limit("20/minute")
 @limiter.limit("1/second")
-def mediasite(o_site, o_id):
-    response = query_media_site(o_site, o_id)
+def mediasite(_site, _id):
+    response = query_media_site(_site, _id)
     valid6 = validators.url(response)
     if response is None or not valid6:
-        return f"Streamlink returned nothing from query {o_id}, reason being {response}"
+        return f"Streamlink returned nothing from query {_id}, reason being {response}"
 
     return redirect(response)
 
