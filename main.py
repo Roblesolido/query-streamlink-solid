@@ -28,17 +28,19 @@ def query_handler(args):
         return get_streams(args.get("streaming-ip")) if valid else "The URL you've entered is not valid."
 
     
-def query_media_site(site_id, channel_id):
+def query_media_site(o_site, o_id):
     """Checks id before serving request"""
-    my_url = ""
-    if site_id == "twitch":
-        my_url = "https://www.twitch.tv/" + channel_id
-    elif site_id == "youtube":
-        my_url = "https://www.youtube.com/embed/" + channel_id
+    o_url = ""
+    if o_site == "twitch":
+        o_url = "https://www.twitch.tv/" + o_id
+    elif o_site == "youtube":
+        o_url = "https://www.youtube.com/channel/" + o_id
+    elif o_site == "youtubevideo":
+        o_url = "https://www.youtube.com/watch?v=" + o_id
 
     # for dacast, be warned we have MULTIPLE parameters. Get it if exists
-    valid7 = validators.url(my_url)
-    return get_streams(my_url) if valid7 else "The URL you've entered is not valid."
+    valid7 = validators.url(o_url)
+    return get_streams(o_url) if valid7 else "The URL you've entered is not valid."
 
     
 @app.route("/", methods=['GET'])
@@ -50,14 +52,14 @@ def index():
            "usage. "
 
 
-@app.route("/<site_id>/<channel_id>.m3u8")
+@app.route("/<o_site>/<o_id>.m3u8")
 @limiter.limit("20/minute")
 @limiter.limit("1/second")
-def mytwitch(site_id, channel_id):
-    response = query_media_site(site_id, channel_id)
+def mediasite(o_site, o_id):
+    response = query_media_site(o_site, o_id)
     valid6 = validators.url(response)
     if response is None or not valid6:
-        return f"Streamlink returned nothing from query {channel_id}, reason being {response}"
+        return f"Streamlink returned nothing from query {o_id}, reason being {response}"
 
     return redirect(response)
 
