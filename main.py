@@ -40,8 +40,8 @@ def index():
 @app.route("/twitch/<channel_id>.m3u8")
 def mytwitch(channel_id):
     myurl = "https://www.twitch.tv/" + channel_id
-    valid = validators.url(myurl)
-    return get_streams(myurl) if valid else "The URL you've entered is not valid."
+    validTW = validators.url(myurl)
+    return get_streams(myurl) if validTW else "The URL you've entered is not valid."
 
 
 @app.route("/iptv-query", methods=['GET'])
