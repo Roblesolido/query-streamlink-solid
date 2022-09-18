@@ -29,7 +29,7 @@ def query_handler(args):
 
     
 def query_media_site(o_site, o_id):
-    """Checks id before serving request"""
+    """Check if the site is enabled"""
     o_url = ""
     if o_site == "twitch":
         o_url = "https://www.twitch.tv/" + o_id
@@ -38,7 +38,7 @@ def query_media_site(o_site, o_id):
     elif o_site == "youtubevideo":
         o_url = "https://www.youtube.com/watch?v=" + o_id
 
-    # for dacast, be warned we have MULTIPLE parameters. Get it if exists
+    # Check for a valid address
     valid7 = validators.url(o_url)
     return get_streams(o_url) if valid7 else "The URL you've entered is not valid."
 
