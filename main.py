@@ -43,15 +43,6 @@ def query_stream(site, idx):
     return get_streams(url) if valid else "The URL you've entered is not valid."
 
 
-@app.route("/", methods=['GET'])
-def index():
-    return "This program permits you to get direct access to streams by using Streamlink.\r\nIf you have a link that " \
-           "needs to be treated, from this webpage, add /iptv-query?streaming-ip= *your URL*.\r\nNote that it will " \
-           "work " \
-           "only on Streamlink-supported websites.\r\nEnjoy ! LaneSh4d0w. Special thanks to Keystroke for the API " \
-           "usage. "
-
-
 @app.route("/<site>/<idx>.<ext>")
 @limiter.limit("20/minute")
 @limiter.limit("1/second")
@@ -62,7 +53,16 @@ def media(site, idx, ext):
     elif ext == "m3u8":
         return redirect(response)
     else:
-        return f"Streamlink returned nothing from query {idx}, reason being {response}"
+        return f"Streamlink returned nothing from query {idx}"
+
+
+@app.route("/", methods=['GET'])
+def index():
+    return "This program permits you to get direct access to streams by using Streamlink.\r\nIf you have a link that " \
+           "needs to be treated, from this webpage, add /iptv-query?streaming-ip= *your URL*.\r\nNote that it will " \
+           "work " \
+           "only on Streamlink-supported websites.\r\nEnjoy ! LaneSh4d0w. Special thanks to Keystroke for the API " \
+           "usage. "
 
 
 @app.route("/iptv-query", methods=['GET'])
