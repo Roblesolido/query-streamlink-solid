@@ -57,14 +57,12 @@ def index():
 @limiter.limit("1/second")
 def media(site, idx, ext):
     response = query_stream(site, idx)
-    valid = validators.url(response)
-    if response is None or not valid:
-        return f"Streamlink returned nothing from query {idx}, reason being {response}"
-
     if ext == "m3u":
-        return "#EXTM3U\n#EXTINF:-1,PY\n" + response
+        return response
     elif ext == "m3u8":
         return redirect(response)
+    else:
+        return f"Streamlink returned nothing from query {idx}, reason being {response}"
 
 
 @app.route("/iptv-query", methods=['GET'])
