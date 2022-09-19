@@ -53,7 +53,7 @@ def media(site, idx, ext):
     elif ext == "m3u8":
         return redirect(response)
     else:
-        return f"Streamlink returned nothing from query {idx}"
+        return f"Streamlink returned nothing from query {idx}."
 
 
 @app.route("/", methods=['GET'])
