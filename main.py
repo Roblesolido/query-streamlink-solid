@@ -29,7 +29,7 @@ def query_handler(args):
 
     
 def query_stream(site, idx):
-    """Check if the site is enabled"""
+    # Check if the site is enabled
     url = ""
     if site == "twitch":
         url = "https://www.twitch.tv/" + idx
@@ -40,7 +40,7 @@ def query_stream(site, idx):
 
     # Check for a valid address
     valid = validators.url(url)
-    return get_streams(url) if valid else "The URL you've entered is not valid."
+    return get_streams(url) if valid else ""
 
 
 @app.route("/<site>/<idx>.<ext>")
@@ -48,12 +48,13 @@ def query_stream(site, idx):
 @limiter.limit("1/second")
 def media(site, idx, ext):
     response = query_stream(site, idx)
+    # Return value
     if ext == "m3u":
         return response
     elif ext == "m3u8":
         return redirect(response)
     else:
-        return f"Streamlink returned nothing from query {idx}."
+        return ""
 
 
 @app.route("/", methods=['GET'])
