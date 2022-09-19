@@ -28,21 +28,21 @@ def query_handler(args):
         return get_streams(args.get("streaming-ip")) if valid else "The URL you've entered is not valid."
 
     
-def query_media_site(_site, _id):
+def query_stream(site, idx):
     """Check if the site is enabled"""
-    _url = ""
-    if _site == "twitch":
-        _url = "https://www.twitch.tv/" + _id
-    elif _site == "youtube":
-        _url = "https://www.youtube.com/channel/" + _id
-    elif _site == "youtubevideo":
-        _url = "https://www.youtube.com/watch?v=" + _id
+    url = ""
+    if site == "twitch":
+        url = "https://www.twitch.tv/" + idx
+    elif site == "youtube":
+        url = "https://www.youtube.com/channel/" + idx
+    elif site == "youtubevideo":
+        url = "https://www.youtube.com/watch?v=" + idx
 
     # Check for a valid address
-    valid7 = validators.url(_url)
-    return get_streams(_url) if valid7 else "The URL you've entered is not valid."
+    valid = validators.url(url)
+    return get_streams(url) if valid else "The URL you've entered is not valid."
 
-    
+
 @app.route("/", methods=['GET'])
 def index():
     return "This program permits you to get direct access to streams by using Streamlink.\r\nIf you have a link that " \
@@ -52,16 +52,19 @@ def index():
            "usage. "
 
 
-@app.route("/<_site>/<_id>.m3u8")
+@app.route("/<site>/<idx>.<ext>")
 @limiter.limit("20/minute")
 @limiter.limit("1/second")
-def mediasite(_site, _id):
-    response = query_media_site(_site, _id)
-    valid6 = validators.url(response)
-    if response is None or not valid6:
-        return f"Streamlink returned nothing from query {_id}, reason being {response}"
+def media(site, idx, ext):
+    response = query_stream(site, idx)
+    valid = validators.url(response)
+    if response is None or not valid:
+        return f"Streamlink returned nothing from query {idx}, reason being {response}"
 
-    return redirect(response)
+    if ext == "m3u":
+        return "#EXTM3U\n#EXTINF:-1,PY\n" + response
+    elif ext == "m3u8":
+        return redirect(response)
 
 
 @app.route("/iptv-query", methods=['GET'])
