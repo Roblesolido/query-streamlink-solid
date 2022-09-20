@@ -37,24 +37,22 @@ def query_stream(site, idx):
         url = "https://www.youtube.com/channel/" + idx
     elif site == "youtubevideo":
         url = "https://www.youtube.com/watch?v=" + idx
-
     # Check for a valid address
     valid = validators.url(url)
     return get_streams(url) if valid else ""
 
 
-@app.route("/<site>/<idx>.<ext>")
+@app.route("/<site>/<idx>.m3u8")
 @limiter.limit("20/minute")
 @limiter.limit("1/second")
-def media(site, idx, ext):
+def media(site, idx):
     response = query_stream(site, idx)
     # Return value
-    if ext == "m3u":
-        return response
-    elif ext == "m3u8":
-        return redirect(response)
-    else:
+    valid2 = validators.url(response)
+    if response is None or not valid2:
         return ""
+    else:
+        return redirect(response)
 
 
 @app.route("/", methods=['GET'])
