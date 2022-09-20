@@ -34,7 +34,7 @@ def query_stream(site, idx):
     if site == "twitch":
         url = "https://www.twitch.tv/" + idx
     elif site == "youtube":
-        url = "https://www.youtube.com/channel/" + idx
+        url = "https://www.youtube.com/channel/" + idx + "/live"
     elif site == "youtubevideo":
         url = "https://www.youtube.com/watch?v=" + idx
     # Check for a valid address
